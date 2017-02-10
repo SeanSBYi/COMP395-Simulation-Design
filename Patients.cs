@@ -22,17 +22,26 @@ namespace ERsimulation
 		//patient array
 		public Patients[] patientArray = new Patients[10];
 
-		//patients move one by one
+		//The line moves forward one by one if the first in line is gone
 		public void MoveForward()
 		{
 			foreach (Patients patient in patientArray) {
-
+                patientArray[i] = patientArray[i + 1];
 			}
 
 		}
+        //The line moves backward one by one if the first in line is gone
+        public void MoveBackward()
+        {
+            foreach (Patients patient in patientArray)
+            {
+                
+                patientArray[i] = patientArray[i - 1];
+            }
+        }
 
-		//generate a new patient with different chances to be green, red or yellow
-		public Patients GeneratePatient()
+        //generate a new patient with different chances to be green, red or yellow
+        public Patients GeneratePatient()
 		{
 			Patients newPatient = new Patients();
 			patientID++;
@@ -48,7 +57,7 @@ namespace ERsimulation
 		}
 
 		//put 10 patients in a line
-		public void GetInLIne()
+		public void MakeLine()
 		{
 			for (int i=0; i<patientArray.Length; i++) {
 				patientArray[i] = GeneratePatient();
@@ -58,20 +67,29 @@ namespace ERsimulation
 
 
 
-
+        //generate a new patient and get him in line base on his type
 		public void NewPatientInLine()
 		{
 			Patients newPatient = new Patients();
-			if (newPatient.patientType == green || newPatient.patientType == yellow) {
+            newPatient = GeneratePatient();
+
+            if (newPatient.patientType == green || newPatient.patientType == yellow) {
 				patientArray [10] = newPatient;
 			}
+            if(newPatient.patientType == red)
+            {
+                patientArray[0] = newPatient;
+            }
 
 			countPatient++;
 		}
 
-
-
-
 	}
+    static int Main(string[] args)
+    {
+        Patients patient = new Patients();
+        patient.MakeLine();
+        Console.WriteLine(patient.patientArray);
+    }
 }
 
