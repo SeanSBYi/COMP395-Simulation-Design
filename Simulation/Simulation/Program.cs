@@ -11,6 +11,20 @@ namespace Simulation
     {
         static void Main(string[] args)
         {
+            Patients patient = new Patients();
+
+            for(int i = 0; i < 10; i++){
+                patient.GeneratePatient();
+                patient.patientList[i] = patient.GeneratePatient();
+            }
+            patient.MakeLine();
+
+            for(int i=0; i<patient.patientList.Count;i++)
+            {
+                patient.GeneratePatient();//generate patients
+                Console.Out.WriteLine(patient);
+                Console.ReadKey();
+            }
         }
 
     }
@@ -20,47 +34,47 @@ namespace Simulation
         int patientID = 0;
         string patientType;
         bool firstInLine = false;
-
+    
         int countPatient; //How many patients in the waiting room
 
-        //patient array
-        public Patients[] patientArray = new Patients[10];
+        //Decided to use list instead of array in case the length of the queue is not always equal to 10.
+        //Patients[] patientArray = new Patients[10];
+        public List<Patients> patientList = new List<Patients>();
+
 
         //The line moves forward one by one if the first in line is gone
         public void MoveForward()
         {
             int i=0;
-            foreach (Patients patient in patientArray)
+            foreach (Patients patient in patientList)
             {
-                patientArray[i] = patientArray[i + 1];
+                patientList[i] = patientList[i + 1];
             }
-
         }
         //The line moves backward one by one if the first in line is gone
         public void MoveBackward()
         {
             int i = 0;
-            foreach (Patients patient in patientArray)
+            
+            foreach (Patients patient in patientList)
             {
-
-                patientArray[i] = patientArray[i - 1];
+                patientList[i] = patientList[i - 1];
             }
         }
 
         //generate a new patient with different chances to be green, red or yellow
         public  Patients GeneratePatient()
         {
-            
             Patients newPatient = new Patients();
             patientID++;
 
-            
-            rand = Random.Next(1, 100);
-            if (rand < 10)
+            Random rand = new Random();
+            int num = rand.Next(1, 100);
+            if (num < 10)
             {
                 patientType = "red";
             }
-            if (rand >= 10 && rand < 40)
+            if (num >= 10 && num < 40)
             {
                 patientType = "red";
             }
@@ -72,11 +86,10 @@ namespace Simulation
         //put 10 patients in a line
         public void MakeLine()
         {
-            for (int i = 0; i < patientArray.Length; i++)
+            for (int i = 0; i < patientList.Count; i++)
             {
-                patientArray[i] = GeneratePatient();
+                patientList[i] = GeneratePatient();
             }
-
         }
 
 
@@ -89,13 +102,12 @@ namespace Simulation
 
             if (newPatient.patientType == "green" || newPatient.patientType == "yellow")
             {
-                patientArray[10] = newPatient;
+                patientList[patientList.Count-1] = newPatient;
             }
             if (newPatient.patientType == "red")
             {
-                patientArray[0] = newPatient;
+                patientList[0] = newPatient;
             }
-
             countPatient++;
         }
 
